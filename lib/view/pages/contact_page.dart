@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:using_objext_box/controller/contact_provider.dart';
 import 'package:using_objext_box/model/contact_model.dart';
+import 'package:using_objext_box/view/widgets/contact_app_widgets.dart';
 
 class ContactAppobbx extends ConsumerWidget {
   ContactAppobbx({super.key});
+  final formKey = GlobalKey<FormState>();
 
   final _namecontroller = TextEditingController();
 
@@ -34,7 +35,7 @@ class ContactAppobbx extends ConsumerWidget {
                     subtitle: Text(contacts[index].number),
                     leading: CircleAvatar(
                       backgroundColor: Colors.amber,
-                      child: Text(contacts[index].name[0]),
+                      child: Text(contacts[index].name[0].toUpperCase()),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -45,9 +46,36 @@ class ContactAppobbx extends ConsumerWidget {
                                   .read(contactProviderProvider.notifier)
                                   .removecontact(contacts[index].id);
                             },
-                            icon: const Icon(Icons.delete_forever_rounded)),
+                            icon: const Icon(
+                              Icons.delete_forever_rounded,
+                              color: Colors.red,
+                            )),
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _namecontroller.text = contacts[index].name;
+                              _numcontroller.text = contacts[index].number;
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return DialogueWidget(
+                                      // formkey: formKey,
+                                      namecontroller: _namecontroller,
+                                      numcontroller: _numcontroller,
+                                      onPress: () {
+                                        ref
+                                            .read(contactProviderProvider
+                                                .notifier)
+                                            .addcontact(ContactModel(
+                                                name: _namecontroller.text,
+                                                number: _numcontroller.text,
+                                                id: contacts[index].id));
+                                        _namecontroller.clear();
+                                        _numcontroller.clear();
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  });
+                            },
                             icon: const Icon(Icons.edit_square)),
                       ],
                     ),
@@ -59,42 +87,19 @@ class ContactAppobbx extends ConsumerWidget {
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Create Contact'),
-                content: SizedBox(
-                  height: 250,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextField(
-                        controller: _namecontroller,
-                        decoration: const InputDecoration(
-                          helperText: 'Name',
-                          hintText: 'Name',
-                        ),
-                      ),
-                      TextField(
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.phone,
-                        controller: _numcontroller,
-                        decoration: const InputDecoration(
-                            hintText: 'Number', helperText: 'Number'),
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            ref
-                                .read(contactProviderProvider.notifier)
-                                .addcontact(ContactModel(
-                                    name: _namecontroller.text,
-                                    number: _numcontroller.text));
-                          },
-                          child: const Text('Save'))
-                    ],
-                  ),
-                ),
-              ),
+              builder: (context) => DialogueWidget(
+                  // formkey: ,
+                  onPress: () {
+                    ref.read(contactProviderProvider.notifier).addcontact(
+                        ContactModel(
+                            name: _namecontroller.text,
+                            number: _numcontroller.text));
+                    _namecontroller.clear();
+                    _numcontroller.clear();
+                    Navigator.pop(context);
+                  },
+                  namecontroller: _namecontroller,
+                  numcontroller: _numcontroller),
             );
           },
           label: const Text('Add Contact')),
