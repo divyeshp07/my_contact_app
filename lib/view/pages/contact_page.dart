@@ -30,54 +30,65 @@ class ContactAppobbx extends ConsumerWidget {
                 )
               : SliverList.builder(
                   itemCount: contacts.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(contacts[index].name),
-                    subtitle: Text(contacts[index].number),
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.amber,
-                      child: Text(contacts[index].name[0].toUpperCase()),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              ref
-                                  .read(contactProviderProvider.notifier)
-                                  .removecontact(contacts[index].id);
-                            },
-                            icon: const Icon(
-                              Icons.delete_forever_rounded,
-                              color: Colors.red,
-                            )),
-                        IconButton(
-                            onPressed: () {
-                              _namecontroller.text = contacts[index].name;
-                              _numcontroller.text = contacts[index].number;
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return DialogueWidget(
-                                      // formkey: formKey,
-                                      namecontroller: _namecontroller,
-                                      numcontroller: _numcontroller,
-                                      onPress: () {
-                                        ref
-                                            .read(contactProviderProvider
-                                                .notifier)
-                                            .addcontact(ContactModel(
-                                                name: _namecontroller.text,
-                                                number: _numcontroller.text,
-                                                id: contacts[index].id));
-                                        _namecontroller.clear();
-                                        _numcontroller.clear();
-                                        Navigator.pop(context);
-                                      },
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: ListTile(
+                          title: Text(contacts[index].name),
+                          subtitle: Text(contacts[index].number),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.amber,
+                            child: Text(
+                              contacts[index].name[0].toUpperCase(),
+                            ),
+                          ),
+                          trailing: PopupMenuButton(
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(
+                                  value: 'Delete',
+                                  child: const Text('Delete'),
+                                  onTap: () {
+                                    ref
+                                        .read(contactProviderProvider.notifier)
+                                        .removecontact(contacts[index].id);
+                                  },
+                                ),
+                                PopupMenuItem(
+                                  value: 'Edit',
+                                  child: const Text('Edit'),
+                                  onTap: () {
+                                    _namecontroller.text = contacts[index].name;
+                                    _numcontroller.text =
+                                        contacts[index].number;
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => DialogueWidget(
+                                          namecontroller: _namecontroller,
+                                          numcontroller: _numcontroller,
+                                          onPress: () {
+                                            ref
+                                                .read(contactProviderProvider
+                                                    .notifier)
+                                                .addcontact(
+                                                  ContactModel(
+                                                      name:
+                                                          _namecontroller.text,
+                                                      number:
+                                                          _numcontroller.text,
+                                                      id: contacts[index].id),
+                                                );
+                                            _namecontroller.clear();
+                                            _numcontroller.clear();
+                                            Navigator.pop(context);
+                                          },
+                                          formkey: formKey),
                                     );
-                                  });
+                                  },
+                                )
+                              ];
                             },
-                            icon: const Icon(Icons.edit_square)),
-                      ],
+                          )),
                     ),
                   ),
                 )
@@ -88,7 +99,7 @@ class ContactAppobbx extends ConsumerWidget {
             showDialog(
               context: context,
               builder: (context) => DialogueWidget(
-                  // formkey: ,
+                  formkey: formKey,
                   onPress: () {
                     ref.read(contactProviderProvider.notifier).addcontact(
                         ContactModel(
