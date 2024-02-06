@@ -14,12 +14,12 @@ class ContactProvider extends _$ContactProvider {
 
   void addcontact(ContactModel ooo) {
     ContactServices.mybox.put(ooo);
-    state = ContactServices.mybox.getAll();
+    state = List.from(sortedlist());
   }
 
   void removecontact(int id) {
     ContactServices.mybox.remove(id);
-    state = ContactServices.mybox.getAll();
+    state = List.from(sortedlist());
   }
 
   List<ContactModel> sortedlist() {
