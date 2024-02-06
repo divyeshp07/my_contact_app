@@ -26,9 +26,38 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "2:7937591296441590548",
+      "lastPropertyId": "4:3285275355952421427",
+      "name": "PasswordAppModel",
+      "properties": [
+        {
+          "id": "1:2992112780473363162",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5289884671635192665",
+          "name": "appName",
+          "type": 9
+        },
+        {
+          "id": "3:9051751802720848701",
+          "name": "password",
+          "type": 9
+        },
+        {
+          "id": "4:3285275355952421427",
+          "name": "isPasswordVisible",
+          "type": 1
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "1:5597332606178528793",
+  "lastEntityId": "2:7937591296441590548",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

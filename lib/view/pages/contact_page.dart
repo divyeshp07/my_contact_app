@@ -1,3 +1,4 @@
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:using_objext_box/controller/contact_provider.dart';
@@ -12,11 +13,24 @@ class ContactAppobbx extends ConsumerWidget {
 
   final _numcontroller = TextEditingController();
 
+  final _searchcontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final contacts = ref.watch(contactProviderProvider);
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 70,
+        actions: [
+          AnimSearchBar(
+            width: 400,
+            textController: _searchcontroller,
+            onSuffixTap: () {
+              _searchcontroller.clear();
+            },
+            onSubmitted: (p0) {},
+          )
+        ],
         centerTitle: true,
         title: const Text('My Contacts'),
       ),
